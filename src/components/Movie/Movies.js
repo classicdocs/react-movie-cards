@@ -19,6 +19,7 @@ export default class Movies extends Component {
     super(props);
 
     this.addNewMovie = this.addNewMovie.bind(this);
+    this.deleteMovie = this.deleteMovie.bind(this);
   }
 
   componentDidMount() {
@@ -34,9 +35,18 @@ export default class Movies extends Component {
   addNewMovie(movie) {
     movie.id = this.generateMovieId();
     movie.rating = 0;
-
+    movie.manualAdded = true;
     this.state.movies.push(movie);
     this.changeViewState(ViewState.VIEW);
+  }
+
+  deleteMovie(movieId) {
+    if (!confirm("Are you sure you want to delete a movie?")) {
+      return;
+    }
+
+    const movies = this.state.movies.filter(movie => movie.id != movieId);
+    this.setState({movies});
   }
 
   generateMovieId() {
@@ -54,7 +64,7 @@ export default class Movies extends Component {
             {viewState === ViewState.VIEW && 
               <div>
                 <button type="button" className="btn btn-success" onClick={() => this.changeViewState(ViewState.ADD)}>Add new movie</button>
-                <MovieList movies={this.state.movies} />
+                <MovieList movies={this.state.movies} deleteMovie={this.deleteMovie}/>
               </div>
             }
             {viewState === ViewState.ADD && 
