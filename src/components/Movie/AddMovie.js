@@ -8,7 +8,8 @@ export default class AddMovie extends Component {
     title: "",
     subtitle: "",
     description: "",
-    imageUrl: ""
+    imageUrl: "",
+    errors: {}
   }
 
   constructor(props) {
@@ -21,12 +22,17 @@ export default class AddMovie extends Component {
 
   onChange(e) {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      errors: {}
     });
   }
 
   onSubmit(e) {
     e.preventDefault();
+
+    if (!this.isFormValid()) {
+      return;
+    }
 
     let movie = {
       title: this.state.title,
@@ -38,6 +44,31 @@ export default class AddMovie extends Component {
     this.props.addNewMovie(movie);
   }
 
+  isFormValid() {
+    let errors = {};
+
+    if (this.state.title === "") {
+      errors["title"] = "Title is required";
+    }
+    if (this.state.subtitle === "") {
+      errors["subtitle"] = "Subtitle is required";
+    }
+    if (this.state.description === "") {
+      errors["description"] = "Description is required";
+    }
+    if (this.state.imageUrl === "") {
+      errors["imageUrl"] = "Image url is required";
+    }
+
+    if (Object.keys(errors).length === 0) {
+      return true;
+    }
+
+    this.setState({errors});
+    return false;
+
+  }
+
   render() {
     return (
       <div>
@@ -45,6 +76,7 @@ export default class AddMovie extends Component {
         <AddMovieForm 
           onChange={this.onChange}
           onSubmit={this.onSubmit}
+          errors={this.state.errors}
         ></AddMovieForm>
       </div>
     )

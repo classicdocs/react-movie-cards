@@ -32,7 +32,7 @@ const MovieCard = ({ movie, deleteMovie, rateMovie }) => {
             {movie.description}
           </p>
           {movie.manualAdded &&
-            <div>
+            <div className="movie-card delete">
               <button type="button" onClick={() => deleteMovie(movie.id)}>Delete</button>
             </div>}
         </div>
